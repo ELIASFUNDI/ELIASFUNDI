@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery - Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Photo Gallery - Booking #{{ booking.id }}</h2>
+        <a href="{% url 'booking_detail' booking.id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Booking
+        </a>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Event:</strong> {{ booking.get_event_type_display }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Date:</strong> {{ booking.event_date|date:"M d, Y" }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Location:</strong> {{ booking.location|truncatewords:5 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if photos %}
+    <div class="row g-4">
+        {% for photo in photos %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100">
+                <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.title }}" style="height: 250px; object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#photoModal{{ photo.id }}">
+                <div class="card-body p-2">
+                    {% if photo.title %}
+                    <h6 class="card-title mb-1">{{ photo.title }}</h6>
+                    {% endif %}
+                    {% if photo.description %}
+                    <p class="card-text small text-muted mb-2">{{ photo.description|truncatewords:10 }}</p>
+                    {% endif %}
+                    <div class="d-flex gap-1">
+                        {% if booking.client == user %}
+                        <form method="post" action="{% url 'select_photo' photo.pk %}" class="flex-fill">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm w-100 {% if photo.is_selected_by_client %}btn-success{% else %}btn-outline-success{% endif %}">
+                                {% if photo.is_selected_by_client %}
+                                    <i class="bi bi-heart-fill"></i> Selected
+                                {% else %}
+                                    <i class="bi bi-heart"></i> Select
+                                {% endif %}
+                            </button>
+                        </form>
+                        {% endif %}
+                        <a href="{% url 'download_photo' photo.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                            <i class="bi bi-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for full-size image -->
+            <div class="modal fade" id="photoModal{{ photo.id }}" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ photo.title|default:"Photo" }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img src="{{ photo.image.url }}" class="img-fluid" alt="{{ photo.title }}">
+                            {% if photo.description %}
+                            <p class="mt-3">{{ photo.description }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'download_photo' photo.pk %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-images" style="font-size: 4rem; color: #ccc;"></i>
+        <h5 class="mt-3">No photos available</h5>
+        <p class="text-muted">Photos will appear here once uploaded by your photographer</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

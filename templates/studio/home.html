@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Photography Studio{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-4">Capture Your Special Moments</h1>
+        <p class="lead mb-4">Professional photography services for all your needs</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a href="{% url 'packages_list' %}" class="btn btn-light btn-lg">View Packages</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+            {% else %}
+                <a href="{% url 'create_booking' %}" class="btn btn-outline-light btn-lg">Book Now</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-5">Our Services</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-heart-fill text-danger" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Weddings</h5>
+                    <p class="card-text">Capture your special day with stunning wedding photography</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Portraits</h5>
+                    <p class="card-text">Professional portrait sessions for individuals and families</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-briefcase-fill text-success" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Corporate Events</h5>
+                    <p class="card-text">Document your corporate events with professional photography</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if packages %}
+<div class="container my-5">
+    <h2 class="text-center mb-5">Featured Packages</h2>
+    <div class="row g-4">
+        {% for package in packages %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if package.image %}
+                <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ package.name }}</h5>
+                    <p class="card-text">{{ package.description|truncatewords:20 }}</p>
+                    <h4 class="text-primary">${{ package.price }}</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'package_detail' package.pk %}" class="btn btn-primary w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'packages_list' %}" class="btn btn-outline-primary">View All Packages</a>
+    </div>
+</div>
+{% endif %}
+
+<div class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-1-circle-fill text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Choose Package</h5>
+                <p>Browse and select the perfect package for your needs</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-2-circle-fill text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Book Session</h5>
+                <p>Schedule your photography session at your convenience</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-3-circle-fill text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Photo Shoot</h5>
+                <p>Professional photographer captures your special moments</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-4-circle-fill text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Download Photos</h5>
+                <p>View, select, and download your edited photos</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

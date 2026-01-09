@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Booking #{{ booking.id }} - Photography Studio{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Booking #{{ booking.id }}</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Booking Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Client:</strong> {{ booking.client.get_full_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Photographer:</strong>
+                            {% if booking.photographer %}
+                                {{ booking.photographer.get_full_name }}
+                            {% else %}
+                                <span class="text-muted">Not assigned yet</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Package:</strong> {{ booking.package.name }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Event Type:</strong> {{ booking.get_event_type_display }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Event Date:</strong> {{ booking.event_date|date:"M d, Y H:i" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong>
+                            {% if booking.status == 'completed' %}
+                                <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                            {% elif booking.status == 'in_progress' %}
+                                <span class="badge bg-warning">{{ booking.get_status_display }}</span>
+                            {% elif booking.status == 'pending' %}
+                                <span class="badge bg-info">{{ booking.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-primary">{{ booking.get_status_display }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <strong>Location:</strong> {{ booking.location }}
+                        </div>
+                    </div>
+                    {% if booking.special_requests %}
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Special Requests:</strong>
+                            <p class="mt-2">{{ booking.special_requests }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Workflow Progress</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for stage in workflow_stages %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if stage.is_completed %}
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                {% else %}
+                                    <i class="bi bi-circle text-muted"></i>
+                                {% endif %}
+                                <strong class="ms-2">{{ stage.get_stage_display }}</strong>
+                                {% if stage.completed_at %}
+                                    <small class="text-muted ms-2">({{ stage.completed_at|date:"M d, Y" }})</small>
+                                {% endif %}
+                            </div>
+                            {% if user.profile.user_type == 'photographer' %}
+                            <form method="post" action="{% url 'update_workflow' stage.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    {% if stage.is_completed %}
+                                        Reopen
+                                    {% else %}
+                                        Mark Complete
+                                    {% endif %}
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Photos ({{ photos|length }})</h5>
+                    {% if user.profile.user_type == 'photographer' %}
+                    <a href="{% url 'upload_photos' booking.id %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-upload"></i> Upload Photos
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if photos %}
+                    <div class="row g-3">
+                        {% for photo in photos %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.title }}" style="height: 200px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    {% if photo.title %}
+                                    <p class="card-text mb-1"><small>{{ photo.title }}</small></p>
+                                    {% endif %}
+                                    <div class="d-flex gap-1">
+                                        {% if booking.client == user %}
+                                        <form method="post" action="{% url 'select_photo' photo.pk %}" class="flex-fill">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm w-100 {% if photo.is_selected_by_client %}btn-success{% else %}btn-outline-success{% endif %}">
+                                                {% if photo.is_selected_by_client %}
+                                                    <i class="bi bi-heart-fill"></i>
+                                                {% else %}
+                                                    <i class="bi bi-heart"></i>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                        <a href="{% url 'download_photo' photo.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'gallery' booking.id %}" class="btn btn-outline-primary">
+                            <i class="bi bi-images"></i> View Full Gallery
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-images" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-2">No photos uploaded yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Comments</h5>
+                </div>
+                <div class="card-body">
+                    {% if comments %}
+                    <div class="mb-4">
+                        {% for comment in comments %}
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <strong>{{ comment.user.get_full_name }}</strong>
+                                    <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <p class="mb-0 mt-2">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'add_comment' booking.id %}">
+                        {% csrf_token %}
+                        {{ comment_form|crispy }}
+                        <button type="submit" class="btn btn-primary mt-2">
+                            <i class="bi bi-chat-left-text"></i> Add Comment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Payment Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>Total Amount:</strong>
+                        <span>${{ booking.total_amount }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>Total Paid:</strong>
+                        <span class="text-success">${{ total_paid }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Balance:</strong>
+                        <strong class="text-danger">${{ booking.total_amount|add:"-"|add:total_paid }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            {% if payments %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Payment History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for payment in payments %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>${{ payment.amount }}</strong>
+                                <span class="badge
+                                    {% if payment.payment_status == 'completed' %}bg-success
+                                    {% elif payment.payment_status == 'pending' %}bg-warning
+                                    {% elif payment.payment_status == 'failed' %}bg-danger
+                                    {% else %}bg-info{% endif %}">
+                                    {{ payment.get_payment_status_display }}
+                                </span>
+                            </div>
+                            <small class="text-muted">
+                                {{ payment.get_payment_method_display }} - {{ payment.payment_date|date:"M d, Y" }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

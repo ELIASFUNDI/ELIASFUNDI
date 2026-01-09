@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Photos - Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Upload Photos - Booking #{{ booking.id }}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <strong>Booking Details:</strong><br>
+                        Client: {{ booking.client.get_full_name }}<br>
+                        Event: {{ booking.get_event_type_display }}<br>
+                        Date: {{ booking.event_date|date:"M d, Y" }}
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-upload"></i> Upload Photo
+                            </button>
+                            <a href="{% url 'booking_detail' booking.id %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-4">
+                <h5><i class="bi bi-info-circle"></i> Upload Guidelines</h5>
+                <ul class="mb-0">
+                    <li>Upload high-quality images (JPEG or PNG format)</li>
+                    <li>Add descriptive titles and descriptions</li>
+                    <li>You can upload multiple photos one at a time</li>
+                    <li>Client will be able to view and select their favorites</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

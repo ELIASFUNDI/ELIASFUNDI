@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Booking - Photography Studio{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create New Booking</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-calendar-check"></i> Create Booking
+                            </button>
+                            <a href="{% url 'client_dashboard' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-info-circle"></i> Booking Information</h5>
+                <ul class="mb-0">
+                    <li>Select your preferred package and event type</li>
+                    <li>Choose a date and time for your photo session</li>
+                    <li>Provide the location details</li>
+                    <li>A photographer will be assigned to your booking</li>
+                    <li>You can track your booking progress from your dashboard</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

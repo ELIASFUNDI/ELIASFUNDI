@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ package.name }} - Photography Studio{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            {% if package.image %}
+            <img src="{{ package.image.url }}" class="img-fluid rounded" alt="{{ package.name }}">
+            {% else %}
+            <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+                <i class="bi bi-camera" style="font-size: 6rem; color: #ccc;"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h2>{{ package.name }}</h2>
+            <h3 class="text-primary mb-4">${{ package.price }}</h3>
+
+            <h5>Description</h5>
+            <p>{{ package.description }}</p>
+
+            <h5 class="mt-4">Package Includes</h5>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item">
+                    <i class="bi bi-clock text-primary"></i> {{ package.duration_hours }} hours session
+                </li>
+                <li class="list-group-item">
+                    <i class="bi bi-images text-primary"></i> {{ package.number_of_photos }} professionally edited photos
+                </li>
+                {% if package.features %}
+                    {% for feature in package.features.splitlines %}
+                        {% if feature %}
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> {{ feature }}
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </ul>
+
+            <div class="d-grid gap-2">
+                {% if user.is_authenticated %}
+                <a href="{% url 'create_booking_with_package' package.pk %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-calendar-check"></i> Book This Package
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-calendar-check"></i> Sign Up to Book
+                </a>
+                {% endif %}
+                <a href="{% url 'packages_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Packages
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
