@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELIASFUNDI - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .intro {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .interests {
+            margin: 30px 0;
+        }
+
+        .interests h2 {
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .interests ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .interests li {
+            padding: 10px 0;
+            font-size: 1.1em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .interests li:last-child {
+            border-bottom: none;
+        }
+
+        .interests li::before {
+            content: "🔹 ";
+            margin-right: 10px;
+        }
+
+        .contact {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .contact a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .contact a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .status {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .status h3 {
+            color: #4CAF50;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👋 Hi, I'm ELIASFUNDI</h1>
+
+        <div class="intro">
+            <p>Welcome to my portfolio! I'm a passionate developer focused on web development and Python applications.</p>
+        </div>
+
+        <div class="interests">
+            <h2>What I Do</h2>
+            <ul>
+                <li>Developing websites and applications using Python</li>
+                <li>Currently learning Penetration Testing</li>
+                <li>Expanding my Python expertise</li>
+                <li>Open to collaboration on web development projects</li>
+            </ul>
+        </div>
+
+        <div class="contact">
+            <h2>Get In Touch</h2>
+            <a href="mailto:eliasdavi965@gmail.com">📫 eliasdavi965@gmail.com</a>
+        </div>
+
+        <div class="status">
+            <h3>✅ Server is Live!</h3>
+            <p>Running on localhost:8000</p>
+        </div>
+    </div>
+</body>
+</html>
