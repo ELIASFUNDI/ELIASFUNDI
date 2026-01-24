@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Transcript Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Video Transcript Converter</h1>
+            <p class="subtitle">Convert Instagram & Facebook videos to text with speaker identification</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="videoUrl"
+                        placeholder="Paste Instagram or Facebook video URL here..."
+                        aria-label="Video URL"
+                    >
+                    <button id="convertBtn" onclick="convertVideo()">
+                        <span class="btn-text">Convert to Transcript</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                </div>
+                <p class="hint">Supports: Instagram Reels, Posts, Stories & Facebook Videos</p>
+            </div>
+
+            <div id="status" class="status" style="display: none;"></div>
+
+            <div id="result" class="result-section" style="display: none;">
+                <div class="result-header">
+                    <h2 id="videoTitle">Transcript</h2>
+                    <div class="action-buttons">
+                        <button onclick="copyTranscript()" class="btn-secondary">Copy All</button>
+                        <button onclick="downloadTranscript()" class="btn-secondary">Download</button>
+                    </div>
+                </div>
+
+                <!-- Chapters Section -->
+                <div id="chaptersSection" style="display: none;">
+                    <h3>Chapters</h3>
+                    <div id="chapters" class="chapters-container"></div>
+                </div>
+
+                <!-- Speakers Summary -->
+                <div id="speakersSummary" class="speakers-summary"></div>
+
+                <!-- Transcript with Speakers -->
+                <div id="transcript" class="transcript-container"></div>
+
+                <!-- Full Text -->
+                <div class="full-text-section">
+                    <h3>Full Transcript (Plain Text)</h3>
+                    <div id="fullText" class="full-text"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with Flask & AssemblyAI | <a href="https://github.com/ELIASFUNDI/ELIASFUNDI" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
