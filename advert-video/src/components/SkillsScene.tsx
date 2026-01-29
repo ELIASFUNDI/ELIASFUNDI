@@ -1,18 +1,22 @@
 import {
   AbsoluteFill,
+  Img,
   interpolate,
   useCurrentFrame,
   spring,
   useVideoConfig,
+  staticFile,
 } from "remotion";
 
 const skills = [
+  { name: "Land Surveying", color: "#f59e0b", icon: "📐" },
+  { name: "GNSS/GPS", color: "#ef4444", icon: "📡" },
+  { name: "Total Station", color: "#8b5cf6", icon: "🔭" },
   { name: "ArcGIS Pro", color: "#2563eb", icon: "🗺️" },
   { name: "QGIS", color: "#22c55e", icon: "🌍" },
   { name: "PostGIS", color: "#3b82f6", icon: "🗄️" },
   { name: "Python", color: "#eab308", icon: "🐍" },
-  { name: "React", color: "#06b6d4", icon: "⚛️" },
-  { name: "FastAPI", color: "#10b981", icon: "⚡" },
+  { name: "Cartography", color: "#ec4899", icon: "🧭" },
 ];
 
 const SkillCard: React.FC<{
@@ -21,7 +25,7 @@ const SkillCard: React.FC<{
   frame: number;
   fps: number;
 }> = ({ skill, index, frame, fps }) => {
-  const delay = index * 8;
+  const delay = index * 6;
 
   const cardSpring = spring({
     frame: frame - delay,
@@ -43,23 +47,24 @@ const SkillCard: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        width: 250,
-        height: 140,
+        width: 200,
+        height: 120,
         background: `linear-gradient(135deg, ${skill.color}20, ${skill.color}10)`,
         border: `2px solid ${skill.color}50`,
-        borderRadius: 20,
+        borderRadius: 16,
         opacity,
         transform: `scale(${scale})`,
         boxShadow: `0 10px 40px ${skill.color}30`,
       }}
     >
-      <span style={{ fontSize: 40, marginBottom: 10 }}>{skill.icon}</span>
+      <span style={{ fontSize: 32, marginBottom: 8 }}>{skill.icon}</span>
       <span
         style={{
-          fontSize: 24,
+          fontSize: 18,
           fontWeight: 600,
           color: "#ffffff",
           letterSpacing: "1px",
+          textAlign: "center",
         }}
       >
         {skill.name}
@@ -80,9 +85,15 @@ export const SkillsScene: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
-  // Progress bar animation
-  const progressWidth = interpolate(frame, [0, 100], [0, 100], {
+  // Image animation
+  const imageOpacity = interpolate(frame, [10, 30], [0, 1], {
     extrapolateRight: "clamp",
+  });
+
+  const imageScale = spring({
+    frame: frame - 10,
+    fps,
+    config: { damping: 15, stiffness: 80 },
   });
 
   return (
@@ -90,7 +101,7 @@ export const SkillsScene: React.FC = () => {
       style={{
         background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        padding: 80,
+        padding: 50,
       }}
     >
       {/* Animated background dots */}
@@ -116,12 +127,12 @@ export const SkillsScene: React.FC = () => {
         style={{
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
-          marginBottom: 60,
+          marginBottom: 30,
         }}
       >
         <h2
           style={{
-            fontSize: 64,
+            fontSize: 56,
             fontWeight: 700,
             color: "#ffffff",
             margin: 0,
@@ -135,39 +146,88 @@ export const SkillsScene: React.FC = () => {
             width: 200,
             height: 4,
             background: "linear-gradient(90deg, #3b82f6, #22c55e)",
-            margin: "20px auto",
+            margin: "15px auto",
             borderRadius: 2,
           }}
         />
       </div>
 
-      {/* Skills Grid */}
+      {/* Main Content - Image + Skills */}
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
+          alignItems: "center",
           justifyContent: "center",
-          gap: 30,
-          maxWidth: 900,
-          margin: "0 auto",
+          gap: 60,
         }}
       >
-        {skills.map((skill, index) => (
-          <SkillCard
-            key={skill.name}
-            skill={skill}
-            index={index}
-            frame={frame}
-            fps={fps}
-          />
-        ))}
+        {/* Survey Equipment Image */}
+        <div
+          style={{
+            opacity: imageOpacity,
+            transform: `scale(${Math.max(0.8, imageScale)})`,
+          }}
+        >
+          <div
+            style={{
+              width: 320,
+              height: 420,
+              borderRadius: 20,
+              overflow: "hidden",
+              border: "3px solid #f59e0b",
+              boxShadow: "0 20px 60px rgba(245, 158, 11, 0.3)",
+            }}
+          >
+            <Img
+              src={staticFile("survey-equipment.jpg")}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+          <p
+            style={{
+              textAlign: "center",
+              color: "#f59e0b",
+              fontSize: 16,
+              marginTop: 12,
+              fontWeight: 500,
+              letterSpacing: "1px",
+            }}
+          >
+            Professional Survey Equipment
+          </p>
+        </div>
+
+        {/* Skills Grid */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 20,
+            maxWidth: 680,
+          }}
+        >
+          {skills.map((skill, index) => (
+            <SkillCard
+              key={skill.name}
+              skill={skill}
+              index={index}
+              frame={frame}
+              fps={fps}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Bottom text */}
       <div
         style={{
           position: "absolute",
-          bottom: 80,
+          bottom: 50,
           left: 0,
           right: 0,
           textAlign: "center",
@@ -178,35 +238,14 @@ export const SkillsScene: React.FC = () => {
       >
         <p
           style={{
-            fontSize: 28,
+            fontSize: 24,
             color: "#94a3b8",
             margin: 0,
             letterSpacing: "2px",
           }}
         >
-          Spatial Analysis • Cartography • Web Mapping • AI Integration
+          Land Surveying • Boundary Mapping • Cadastral Surveys • Topographic Mapping
         </p>
-
-        {/* Progress indicator */}
-        <div
-          style={{
-            width: 300,
-            height: 4,
-            background: "#1e293b",
-            borderRadius: 2,
-            margin: "30px auto 0",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              width: `${progressWidth}%`,
-              height: "100%",
-              background: "linear-gradient(90deg, #3b82f6, #22c55e)",
-              borderRadius: 2,
-            }}
-          />
-        </div>
       </div>
     </AbsoluteFill>
   );

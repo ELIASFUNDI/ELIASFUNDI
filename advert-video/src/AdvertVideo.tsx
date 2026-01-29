@@ -1,6 +1,7 @@
 import { AbsoluteFill, Sequence } from "remotion";
 import { IntroScene } from "./components/IntroScene";
 import { SkillsScene } from "./components/SkillsScene";
+import { FieldWorkScene } from "./components/FieldWorkScene";
 import { ProjectsScene } from "./components/ProjectsScene";
 import { ContactScene } from "./components/ContactScene";
 
@@ -17,13 +18,18 @@ export const AdvertVideo: React.FC = () => {
         <SkillsScene />
       </Sequence>
 
-      {/* Projects Scene - 240 to 360 frames (4 seconds) */}
+      {/* Field Work Scene - 240 to 360 frames (4 seconds) */}
       <Sequence from={240} durationInFrames={120}>
+        <FieldWorkScene />
+      </Sequence>
+
+      {/* Projects Scene - 360 to 480 frames (4 seconds) */}
+      <Sequence from={360} durationInFrames={120}>
         <ProjectsScene />
       </Sequence>
 
-      {/* Contact/CTA Scene - 360 to 450 frames (3 seconds) */}
-      <Sequence from={360} durationInFrames={90}>
+      {/* Contact/CTA Scene - 480 to 570 frames (3 seconds) */}
+      <Sequence from={480} durationInFrames={90}>
         <ContactScene />
       </Sequence>
     </AbsoluteFill>
