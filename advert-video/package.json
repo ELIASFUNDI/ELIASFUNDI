@@ -1,0 +1,22 @@
+{
+  "name": "elias-fundi-advert",
+  "version": "1.0.0",
+  "description": "Professional advertisement video for Elias Fundi - GIS Specialist",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render src/index.tsx AdvertVideo out/advert.mp4",
+    "build:gif": "remotion render src/index.tsx AdvertVideo out/advert.gif --image-format=png",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.180",
+    "@remotion/player": "4.0.180",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "4.0.180"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.3.0"
+  }
+}
