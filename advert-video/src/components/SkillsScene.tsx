@@ -179,7 +179,7 @@ export const SkillsScene: React.FC = () => {
             }}
           >
             <Img
-              src={staticFile("survey-equipment.jpg")}
+              src={staticFile("survey-equipment.jpeg")}
               style={{
                 width: "100%",
                 height: "100%",

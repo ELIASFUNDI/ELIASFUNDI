@@ -130,7 +130,7 @@ export const FieldWorkScene: React.FC = () => {
             }}
           >
             <Img
-              src={staticFile("fieldwork.jpg")}
+              src={staticFile("fieldwork.jpeg")}
               style={{
                 width: "100%",
                 height: "100%",
@@ -285,7 +285,7 @@ export const FieldWorkScene: React.FC = () => {
             }}
           >
             <Img
-              src={staticFile("graduation.jpg")}
+              src={staticFile("graduation.jpeg")}
               style={{
                 width: "100%",
                 height: "100%",
